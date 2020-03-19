@@ -1,65 +1,32 @@
-package com.cakestore.domain.security;
+package com.cakestore.utility;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.security.SecureRandom;
+import java.util.Random;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Component;
 
-import com.cakestore.domain.User;
+@Component
+public class SecurityUtility {
+    private static final String SALT = "salt"; // salt should be protected carefully
 
-@Entity
-public class PasswordResetToken {
-
-    private static final int EXPIRATION = 60 * 24;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    private String token;
-
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable=false, name="user_id")
-    private User user;
-
-    private Date expiryDate;
-
-    public PasswordResetToken(final String token, final User user) {
-        super();
-
-        this.token = token;
-        this.user = user;
-        this.expiryDate = calculateExpiryDate(EXPIRATION);
-
-
+    // Generate random String
+    @Bean
+    public static BCryptPasswordEncoder passwordEncoder (){
+        return new BCryptPasswordEncoder (12,  new SecureRandom(SALT.getBytes()));
     }
+    @Bean
+    public static String randompassword() {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXY1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
 
-    private Date calculateExpiryDate(final int expiryTimeInMinutes) {
-        final Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(new Date().getTime());
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
+        while (salt.length()<18) {
+            int index = (int) (rnd.nextFloat()*SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
     }
-    public void updateToken(final String token) {
-        this.token = token;
-        this.expiryDate = calculateExpiryDate (EXPIRATION);
-    }
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
 }
