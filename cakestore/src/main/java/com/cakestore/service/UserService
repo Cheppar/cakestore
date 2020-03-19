@@ -1,0 +1,11 @@
+package com.cakestore.service;
+
+import com.cakestore.domain.User;
+import com.cakestore.domain.security.PasswordResetToken;
+
+public interface UserService {
+    PasswordResetToken getPasswordResetToken(final String token);
+
+    void createPasswordResetTokenForUser(final User user, final String token);
+}
+
