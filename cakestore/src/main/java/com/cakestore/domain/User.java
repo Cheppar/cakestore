@@ -28,9 +28,10 @@ public class User implements UserDetails {
 	@Column(name="id", nullable=false, updatable=false)
 	private Long id;
 	private String username;
+	private String password;
 	private String firstName;
 	private String lastName;
-	
+
 	@Column(name="email", nullable=false, updatable=false)
 	private String email;
 	private String phone;
@@ -39,8 +40,8 @@ public class User implements UserDetails {
 	@OneToMany(mappedBy = "user", cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	@JsonIgnore
 	private Set<UserRole> userRoles = new HashSet<>();
-	
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -88,10 +89,6 @@ public class User implements UserDetails {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -108,7 +105,8 @@ public class User implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities = new HashSet<>();
-		userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+		userRoles.forEach(ur -> authorities.add(new
+		Authority(ur.getRole().getName())));
 		return authorities;
 	}
 
@@ -130,12 +128,22 @@ public class User implements UserDetails {
 		// TODO Auto-generated method stub
 		return true;
 	}
+	@Override
+		public boolean isEnabled() {
+			return enabled;
+		}
 
 	@Override
 	public String getPassword() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	
-}
+
+	public void setPassword(String encryptedPassword) {
+		// TODO Auto-generated method stub
+
+	}
+
+
+	}
+
