@@ -16,11 +16,9 @@ import com.cakestore.repository.UserRepository;
 import com.cakestore.service.UserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService{
 
-
-    private static final Logger LOG =
-    LoggerFactory.getLogger(UserService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private UserRepository userRepository;
@@ -29,11 +27,10 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private PasswordResetTokenRepository
-    passwordResetTokenRepository;
+    private PasswordResetTokenRepository passwordResetTokenRepository;
 
     @Override
-    public PasswordResetToken getPasswordResetToken (final String token) {
+    public PasswordResetToken getPasswordResetToken(final String token) {
         return passwordResetTokenRepository.findByToken(token);
     }
 
@@ -42,26 +39,28 @@ public class UserServiceImpl implements UserService {
         final PasswordResetToken myToken = new PasswordResetToken(token, user);
         passwordResetTokenRepository.save(myToken);
     }
+
     @Override
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
-        }
+    }
 
     @Override
     public User findByEmail (String email) {
         return userRepository.findByEmail(email);
     }
 
-
-    public User createUser (User user, Set<UserRole> userRoles){
+    @Override
+    public User createUser(User user, Set<UserRole> userRoles){
         User localUser = userRepository.findByUsername(user.getUsername());
 
         if(localUser != null) {
-        LOG.info("user already exists. Use another email as nothing will happen.", user.getUsername());
-        }else {
-            for(UserRole ur : userRoles) {
-            roleRepository.save(ur.getRole());
+            LOG.info("user {} already exists. Nothing will be done.", user.getUsername());
+        } else {
+            for (UserRole ur : userRoles) {
+                roleRepository.save(ur.getRole());
             }
+
             user.getUserRoles().addAll(userRoles);
 
             localUser = userRepository.save(user);
@@ -69,4 +68,10 @@ public class UserServiceImpl implements UserService {
 
         return localUser;
     }
+
+    @Override
+    public User save(User user) {
+        return userRepository.save(user);
+    }
+
 }
