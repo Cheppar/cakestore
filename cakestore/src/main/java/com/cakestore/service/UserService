@@ -1,30 +1,21 @@
-package com.cakestore.service.impl;
+package com.cakestore.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
+import java.util.Set;
 
 import com.cakestore.domain.User;
-import com.cakestore.repository.UserRepository;
+import com.cakestore.domain.security.PasswordResetToken;
+import com.cakestore.domain.security.UserRole;
 
-@Service
-public class UserSecurityService implements  UserDetailsService{
+public interface UserService {
+    PasswordResetToken getPasswordResetToken(final String token);
 
-    @Autowired
-    private UserRepository userRepository;
+    void createPasswordResetTokenForUser(final User user, final String token);
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        User user = userRepository.findByUsername(username);
+    User findByUsername(String username);
 
-        if(null == user) {
-            throw new UsernameNotFoundException("Username not found");
+    User findByEmail (String email);
 
-        }
-        return user;
-    }
+    User createUser(User user, Set<UserRole> userRoles) throws Exception;
 
-
+    User save(User user);
 }
