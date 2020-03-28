@@ -12,7 +12,7 @@ import javax.persistence.Table;
 import com.cakestore.domain.User;
 
 @Entity
-@Table(name="user_Role")
+@Table(name="user_role")
 public class UserRole {
 
 	@Id
@@ -27,10 +27,7 @@ public class UserRole {
 	@JoinColumn(name="role_id")
 	private Role role;
 
-
-	public UserRole() {
-
-	}
+	public UserRole(){}
 
 	public UserRole(User user, Role role) {
 		this.user = user;
