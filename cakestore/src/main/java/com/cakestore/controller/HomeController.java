@@ -49,13 +49,13 @@ public class HomeController {
 	public String index() {
 		return "index";
 	}
-
+//** Login capability mapping **//
 	@RequestMapping("/login")
 	public String login(Model model) {
 		model.addAttribute("classActiveLogin", true);
 		return "myAccount";
 	}
-
+//** Forget password **//
 	@RequestMapping("/forgetPassword")
 	public String forgetPassword(
 			HttpServletRequest request,
@@ -93,7 +93,7 @@ public class HomeController {
 
 		return "myAccount";
 	}
-
+//** New User mapping **//
 	@RequestMapping(value="/newUser", method = RequestMethod.POST)
 	public String newUserPost(
 			HttpServletRequest request,
@@ -147,7 +147,7 @@ public class HomeController {
 		return "myAccount";
 	}
 
-
+//** new user after creating password **//
 	@RequestMapping("/newUser")
 	public String newUser(Locale locale, @RequestParam("token") String token, Model model) {
 		PasswordResetToken passToken = userService.getPasswordResetToken(token);
